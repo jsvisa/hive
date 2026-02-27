@@ -6,6 +6,14 @@ workspace
 /hivechain
 /hiveview
 
+# local client source directories for Dockerfile.local builds
+clients/besu/besu
+clients/erigon/erigon
+clients/ethereumjs/ethereumjs-monorepo
+clients/go-ethereum/go-ethereum
+clients/nethermind/nethermind
+clients/reth/reth
+
 # build output for rust simulators and hivesim-rs files
 simulators/**/target
 hivesim-rs/Cargo.lock

@@ -37,7 +37,8 @@ COPY ${local_path}/packages/wallet/package.json ethereumjs-monorepo/packages/wal
 RUN cd ethereumjs-monorepo && git init
 
 RUN cd ethereumjs-monorepo && cp package.json package.json.bak && npm pkg set scripts.postinstall="echo no-postinstall"
-RUN cd ethereumjs-monorepo && npm i
+RUN --mount=type=cache,target=/root/.npm \
+    cd ethereumjs-monorepo && npm i
 RUN cd ethereumjs-monorepo && cp package.json.bak package.json && rm package.json.bak
 
 COPY ${local_path}/node_modules/@ethereumjs ethereumjs-monorepo/node_modules/@ethereumjs

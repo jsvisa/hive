@@ -8,12 +8,16 @@ ARG local_path=go-ethereum
 
 # Copy go.mod and go.sum and download dependencies in a separate layer
 COPY $local_path/go.mod $local_path/go.sum go-ethereum/
-RUN cd go-ethereum && go mod download
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    cd go-ethereum && go mod download
 
 # Copy the source code
 COPY $local_path go-ethereum
 WORKDIR go-ethereum
-RUN make geth
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    make geth
 RUN mv ./build/bin/geth /usr/local/bin/geth
 
 FROM alpine:latest

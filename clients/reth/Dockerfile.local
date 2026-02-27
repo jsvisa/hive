@@ -4,12 +4,17 @@
 ## Builder stage: Compiles reth from a git repository
 FROM rust:latest as builder
 
+# Install build dependencies (cached separately from source changes)
+RUN apt-get update && apt-get install -y libclang-dev pkg-config build-essential
+
 # Default local client path: clients/reth/<reth>
 ARG local_path=reth
 COPY $local_path reth
 
-RUN apt-get update && apt-get install -y libclang-dev pkg-config build-essential \
-    && cd reth && cargo build --release \
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    --mount=type=cache,target=/usr/local/cargo/git \
+    --mount=type=cache,target=/reth/target \
+    cd reth && cargo build --release \
     && cp target/release/reth /usr/local/bin/reth
 
 ## Final stage: Sets up the environment for running reth

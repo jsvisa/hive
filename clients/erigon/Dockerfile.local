@@ -4,12 +4,16 @@
 ## Builder stage: Compiles erigon from a local directory
 FROM golang:1.25.0-trixie as builder
 
+# Install build dependencies (cached separately from source changes)
+RUN apt-get update && apt-get install -y bash build-essential ca-certificates git
+
 # Default local client path: clients/erigon/<erigon>
 ARG local_path=erigon
 COPY $local_path erigon
 
-RUN apt-get update && apt-get install -y bash build-essential ca-certificates git \
-    && cd erigon && make erigon \
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    cd erigon && make erigon \
     && cp build/bin/erigon /usr/local/bin/erigon
 
 ## Final stage: Sets up the environment for running erigon

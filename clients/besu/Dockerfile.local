@@ -12,8 +12,7 @@ RUN apt-get update && apt-get install -y git libsodium-dev libnss3-dev \
 ARG local_path=besu
 COPY $local_path besu
 
-RUN --mount=type=cache,target=/root/.gradle \
-    cd besu && ./gradlew installDist
+RUN cd besu && ./gradlew installDist
 
 ## Final stage: Sets up the environment for running besu
 FROM ubuntu:22.04

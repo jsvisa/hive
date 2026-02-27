@@ -11,10 +11,7 @@ RUN apt-get update && apt-get install -y libclang-dev pkg-config build-essential
 ARG local_path=reth
 COPY $local_path reth
 
-RUN --mount=type=cache,target=/usr/local/cargo/registry \
-    --mount=type=cache,target=/usr/local/cargo/git \
-    --mount=type=cache,target=/reth/target \
-    cd reth && cargo build --release \
+RUN cd reth && cargo build --release \
     && cp target/release/reth /usr/local/bin/reth
 
 ## Final stage: Sets up the environment for running reth

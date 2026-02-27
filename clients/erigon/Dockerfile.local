@@ -11,9 +11,7 @@ RUN apt-get update && apt-get install -y bash build-essential ca-certificates gi
 ARG local_path=erigon
 COPY $local_path erigon
 
-RUN --mount=type=cache,target=/go/pkg/mod \
-    --mount=type=cache,target=/root/.cache/go-build \
-    cd erigon && make erigon \
+RUN cd erigon && make erigon \
     && cp build/bin/erigon /usr/local/bin/erigon
 
 ## Final stage: Sets up the environment for running erigon
